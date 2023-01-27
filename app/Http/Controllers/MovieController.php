@@ -38,9 +38,9 @@ class MovieController extends Controller
         }
         while ($retries < $this->maxRetries) {
             try {
-                $barMovieTitles = $this->$barService->getTitles();
-                $fooMovieTitles = $this->$fooService->getTitles();
-                $bazMovieTitles = $this->$bazService->getTitles();
+                $barMovieTitles = $this->barService->getTitles();
+                $fooMovieTitles = $this->fooService->getTitles();
+                $bazMovieTitles = $this->bazService->getTitles();
 
                 //ensuring only one title from each array of titles
                 $barTitles = array_slice(array_column($barMovieTitles['titles'], 'title'), 0, 1);
