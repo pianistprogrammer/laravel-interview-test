@@ -23,26 +23,46 @@ class AuthControllerTest extends TestCase
         putenv('JWT_SECRET=secret');
     }
 
-   public function testBarLoginSuccess()
-{
-    // Arrange
-    $login = 'BAR12345';
-    $password = 'foo-bar-baz';
-    $expectedResponse = ['status' => 'success', 'token' => 'valid_token'];
-    $mock = Mockery::mock(LoginService::class);
-    $mock->shouldReceive('login')->with($login, $password)->andReturn(true);
-    $this->app->instance(LoginService::class, $mock);
+    public function testBarLoginSuccess()
+    {
+        // Arrange
+        $login = 'BAR12345';
+        $password = 'foo-bar-baz';
+        $expectedResponse = ['status' => 'success', 'token' => 'valid_token'];
+        $mock = Mockery::mock(LoginService::class);
+        $mock->shouldReceive('login')->with($login, $password)->andReturn(true);
+        $this->app->instance(LoginService::class, $mock);
 
-    // Act
-    $response = $this->postJson('/login', [
-        'login' => $login,
-        'password' => $password
-    ]);
+        // Act
+        $response = $this->postJson('/login', [
+            'login' => $login,
+            'password' => $password
+        ]);
 
-    // Assert
-    $response->assertStatus(200);
-    $response->assertJson($expectedResponse);
-}
+        // Assert
+        $response->assertStatus(200);
+        $response->assertJson($expectedResponse);
+    }
+
+    public function testBarLoginFailure()
+    {
+        // Arrange
+        $login = 'BAR12345';
+        $password = 'foo-bar-baz';
+        $expectedResponse = ['status' => 'failure', 'error' => 'Invalid login credentials'];
+        $mock = Mockery::mock(LoginService::class);
+        $mock->shouldReceive('login')->with($login, $password)->andReturn(false);
+        $this->app->instance(LoginService::class, $mock);
 
 
+        // Act
+        $response = $this->postJson('/login', [
+            'login' => $login,
+            'password' => $password
+        ]);
+
+        // Assert
+        $response->assertStatus(401);
+        $response->assertJson($expectedResponse);
+    }
 }

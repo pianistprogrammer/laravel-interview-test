@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use External\Bar\Auth\LoginService;
 use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use External\Baz\Exceptions\ServiceUnavailableException;
 
 class AuthControllerTest extends TestCase
 {
@@ -43,5 +44,27 @@ class AuthControllerTest extends TestCase
         // Assert
         $response->assertStatus(200);
         $response->assertJson($expectedResponse);
-    }       
+    } 
+    public function testBazAuthFailure()
+    {
+        // Arrange
+        $login = 'BAZ12345';
+        $password = 'foo-bar-baz';
+        $expectedResponse = ['status' => 'failure', 'message' => 'Invalid login or password'];
+        $mock = Mockery::mock(Authenticator::class);
+        $mock->shouldReceive('auth')->with($login, $password)->andReturn(new Failure());
+        $this->app->instance(Authenticator::class, $mock);
+        
+        // Act
+        $response = $this->postJson('/login', [
+                'login' => $login,
+                'password' => $password
+            ]);
+
+        // Assert
+        $response->assertStatus(401);
+        $response->assertJson($expectedResponse);
+    }
+
+      
 }
