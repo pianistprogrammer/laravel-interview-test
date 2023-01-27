@@ -20,12 +20,18 @@ class MovieController extends Controller
     private $maxRetries = 3;
     private $retryDelay = 1; // in seconds
     private $cache;
+    private $barService;
+    private $fooService;
+    private $bazService;
 
     public function __construct(Cache $cache, BarService $barService, FooService $fooService, BazService $bazService) {
         $this->cache = $cache;
         $this->barService = $barService;
         $this->fooService = $fooService;
         $this->bazService = $bazService;
+        $this->maxRetries = $maxRetries;
+        $this->retryDelay = $retryDelay;
+        
     }
 
     public function getTitles(Request $request): JsonResponse
