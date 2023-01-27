@@ -21,8 +21,11 @@ class MovieController extends Controller
     private $retryDelay = 1; // in seconds
     private $cache;
 
-    public function __construct(Cache $cache) {
+    public function __construct(Cache $cache, BarService $barService, FooService $fooService, BazService $bazService) {
         $this->cache = $cache;
+        $this->barService = $barService;
+        $this->fooService = $fooService;
+        $this->bazService = $bazService;
     }
 
     public function getTitles(Request $request): JsonResponse
@@ -30,19 +33,15 @@ class MovieController extends Controller
         $allTitles = [];
         $retries = 0;
 
-        $barService = new BarService();
-        $fooService = new FooService();
-        $bazService = new BazService();
-
         if ($this->cache->has('titles')) {
             return $this->cache->get('titles');
         }
         while ($retries < $this->maxRetries) {
             try {
-                $barMovieTitles = $barService->getTitles();
-                $fooMovieTitles = $fooService->getTitles();
-                $bazMovieTitles = $bazService->getTitles();
-                
+                $barMovieTitles = $this->$barService->getTitles();
+                $fooMovieTitles = $this->$fooService->getTitles();
+                $bazMovieTitles = $this->$bazService->getTitles();
+
                 //ensuring only one title from each array of titles
                 $barTitles = array_slice(array_column($barMovieTitles['titles'], 'title'), 0, 1);
                 $fooTitles = array_slice($fooMovieTitles, 0, 1);
