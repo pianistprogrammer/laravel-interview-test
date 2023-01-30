@@ -6,6 +6,7 @@ use External\Baz\Auth\Authenticator;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Builder;
 use External\Baz\Auth\Responses\Failure;
+
 class AuthenticationService
 {
 /**
