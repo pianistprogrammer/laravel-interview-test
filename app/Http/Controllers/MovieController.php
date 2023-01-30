@@ -16,7 +16,7 @@ class MovieController extends Controller
      * @return JsonResponse
      */
 
-     private $titlesService;
+    private $titlesService;
 
     public function __construct(TitlesService $titlesService) {
         $this->titlesService = $titlesService;

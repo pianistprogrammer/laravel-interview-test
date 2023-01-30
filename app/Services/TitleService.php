@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
 use External\Bar\Movies\MovieService as BarService;
 use External\Baz\Movies\MovieService as BazService;
 use External\Foo\Movies\MovieService as FooService;
